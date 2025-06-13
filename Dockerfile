@@ -22,10 +22,20 @@ RUN pip install --upgrade pip wheel setuptools
 # Pass GitHub token as build arg
 ARG GITHUB_TOKEN
 
+# Debug: Check if token is being passed
+RUN echo "GitHub Token status: $(if [ -z "$GITHUB_TOKEN" ]; then echo 'NOT SET'; else echo 'SET (hidden)'; fi)"
+
 # Configure git to use the token for authentication
 RUN if [ ! -z "$GITHUB_TOKEN" ]; then \
-        git config --global url."https://oauth2:${GITHUB_TOKEN}@github.com/".insteadOf "https://github.com/"; \
+        echo "Configuring git with token..." && \
+        git config --global url."https://oauth2:${GITHUB_TOKEN}@github.com/".insteadOf "https://github.com/" && \
+        echo "Git config set successfully"; \
+    else \
+        echo "No GitHub token provided, skipping git config"; \
     fi
+
+# Debug: Show git config
+RUN git config --global --list | grep url || echo "No URL replacements in git config"
 
 # Install Python dependencies
 RUN pip install --no-cache-dir -r requirements.txt || \
