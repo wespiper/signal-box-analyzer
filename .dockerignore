@@ -1,0 +1,30 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+env/
+ENV/
+
+# Git
+.git/
+.gitignore
+
+# IDEs
+.vscode/
+.idea/
+
+# Frontend (not needed for backend)
+frontend/node_modules/
+frontend/dist/
+frontend/build/
+
+# Other
+.env
+.env.*
+*.log
+.DS_Store
+reports/*.html
+reports/*.json

@@ -19,20 +19,18 @@ RUN git --version
 # Upgrade pip and install wheel
 RUN pip install --upgrade pip wheel setuptools
 
-# Configure git to use token for private repos (if provided)
+# Pass GitHub token as build arg
 ARG GITHUB_TOKEN
-ENV GITHUB_TOKEN=$GITHUB_TOKEN
+
+# Configure git to use the token for authentication
+RUN if [ ! -z "$GITHUB_TOKEN" ]; then \
+        git config --global url."https://oauth2:${GITHUB_TOKEN}@github.com/".insteadOf "https://github.com/"; \
+    fi
 
 # Install Python dependencies
-RUN if [ -n "$GITHUB_TOKEN" ]; then \
-      echo "Installing with private repo access..." && \
-      pip install --no-cache-dir git+https://${GITHUB_TOKEN}@github.com/wespiper/signal-box.git@main && \
-      grep -v "signal-box" requirements.txt > requirements-filtered.txt && \
-      pip install --no-cache-dir -r requirements-filtered.txt; \
-    else \
-      echo "Installing without private repo access..." && \
-      pip install --no-cache-dir -r requirements.txt; \
-    fi
+RUN pip install --no-cache-dir -r requirements.txt || \
+    (echo "Failed to install requirements. Error details:" && \
+     pip install --no-cache-dir -r requirements.txt -v)
 
 # Copy application code
 COPY . .
