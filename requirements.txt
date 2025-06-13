@@ -1,0 +1,22 @@
+# Signal Box Cost Analyzer Dependencies
+
+# Core Signal Box dependency
+git+https://github.com/wespiper/signal-box.git
+
+# FastAPI and server
+fastapi>=0.104.0
+uvicorn[standard]>=0.24.0
+pydantic>=2.5.0
+pydantic-settings>=2.1.0
+
+# HTTP client for GitHub API
+httpx>=0.25.0
+
+# CORS support
+python-multipart>=0.0.6
+
+# Development dependencies
+pytest>=7.4.0
+pytest-asyncio>=0.21.0
+black>=23.9.0
+ruff>=0.1.0
