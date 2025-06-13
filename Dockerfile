@@ -22,8 +22,8 @@ RUN pip install --upgrade pip wheel setuptools
 # Pass GitHub token as build arg
 ARG GITHUB_TOKEN
 
-# Debug: Check if token is being passed
-RUN echo "GitHub Token status: $(if [ -z "$GITHUB_TOKEN" ]; then echo 'NOT SET'; else echo 'SET (hidden)'; fi)"
+# Debug: Check if token is being passed (v2)
+RUN echo "GitHub Token status at $(date): $(if [ -z "$GITHUB_TOKEN" ]; then echo 'NOT SET'; else echo 'SET (hidden)'; fi)"
 
 # Configure git to use the token for authentication
 RUN if [ ! -z "$GITHUB_TOKEN" ]; then \
