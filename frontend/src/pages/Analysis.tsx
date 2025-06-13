@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useSearchParams, useNavigate } from 'react-router-dom'
 import { Rocket, ArrowLeft, Github, ExternalLink } from 'lucide-react'
-import { getExampleAnalysis, analyzeRepository, AnalysisResponse, APIError } from '../services/api'
+import { getExampleAnalysis, analyzeRepository, APIError, type AnalysisResponse } from '../services/api'
 
 const Analysis = () => {
   const [searchParams] = useSearchParams()

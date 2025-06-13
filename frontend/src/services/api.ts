@@ -3,7 +3,7 @@
  * Time estimate: 2 hours
  */
 
-import axios, { AxiosResponse } from 'axios'
+import axios, { type AxiosResponse } from 'axios'
 
 // Base API configuration
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000'
@@ -80,7 +80,7 @@ export interface ExamplesResponse {
 }
 
 // Error handling
-export class APIError extends Error {
+class APIError extends Error {
   constructor(
     message: string,
     public status?: number,
@@ -90,6 +90,8 @@ export class APIError extends Error {
     this.name = 'APIError'
   }
 }
+
+export { APIError }
 
 // Request interceptor for logging
 api.interceptors.request.use(
@@ -346,6 +348,3 @@ export const calculateSavings = (originalCost: number, optimizedCost: number) =>
 
 // Export the configured axios instance for custom requests
 export { api }
-
-// Export types
-export type { AnalysisResponse, AnalysisStatus, ComponentInfo, OptimizationInfo, ExampleInfo, ExamplesResponse }
