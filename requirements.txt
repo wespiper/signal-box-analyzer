@@ -1,7 +1,7 @@
 # Signal Box Cost Analyzer Dependencies
 
 # Core Signal Box dependency
-git+https://github.com/wespiper/signal-box.git
+signal-box @ git+https://github.com/wespiper/signal-box.git@main
 
 # FastAPI and server
 fastapi>=0.104.0

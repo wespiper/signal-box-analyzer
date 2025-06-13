@@ -9,10 +9,20 @@ COPY requirements.txt .
 # Install system dependencies (including git for GitHub dependencies)
 RUN apt-get update && apt-get install -y \
     git \
+    gcc \
+    python3-dev \
     && rm -rf /var/lib/apt/lists/*
 
-# Install Python dependencies
-RUN pip install --no-cache-dir -r requirements.txt
+# Verify git is installed
+RUN git --version
+
+# Upgrade pip and install wheel
+RUN pip install --upgrade pip wheel setuptools
+
+# Install Python dependencies with verbose output
+RUN pip install --no-cache-dir -r requirements.txt || \
+    (echo "Failed to install requirements. Trying with verbose output:" && \
+     pip install --no-cache-dir -r requirements.txt -v)
 
 # Copy application code
 COPY . .
