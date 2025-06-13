@@ -3,7 +3,7 @@
  * Time estimate: 2 hours
  */
 
-import axios, { type AxiosResponse } from 'axios'
+import axios from 'axios'
 
 // Base API configuration
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000'
@@ -81,13 +81,18 @@ export interface ExamplesResponse {
 
 // Error handling
 class APIError extends Error {
+  status?: number
+  code?: string
+  
   constructor(
     message: string,
-    public status?: number,
-    public code?: string
+    status?: number,
+    code?: string
   ) {
     super(message)
     this.name = 'APIError'
+    this.status = status
+    this.code = code
   }
 }
 
