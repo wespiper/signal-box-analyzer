@@ -84,3 +84,8 @@ Thumbs.db
 # Temporary files
 *.tmp
 *.temp
+
+# Vendor directory - we DO want to commit this
+!vendor/
+vendor/__pycache__/
+vendor/**/*.pyc

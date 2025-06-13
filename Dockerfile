@@ -19,31 +19,16 @@ RUN git --version
 # Upgrade pip and install wheel
 RUN pip install --upgrade pip wheel setuptools
 
-# Pass GitHub token as build arg
-ARG GITHUB_TOKEN
+# Install Python dependencies (excluding signal-box which is vendored)
+COPY requirements.txt requirements-no-signalbox.txt
+RUN grep -v "signal-box" requirements.txt > requirements-no-signalbox.txt || cp requirements.txt requirements-no-signalbox.txt
+RUN pip install --no-cache-dir -r requirements-no-signalbox.txt
 
-# Debug: Check if token is being passed (v2)
-RUN echo "GitHub Token status at $(date): $(if [ -z "$GITHUB_TOKEN" ]; then echo 'NOT SET'; else echo 'SET (hidden)'; fi)"
-
-# Configure git to use the token for authentication
-RUN if [ ! -z "$GITHUB_TOKEN" ]; then \
-        echo "Configuring git with token..." && \
-        git config --global url."https://oauth2:${GITHUB_TOKEN}@github.com/".insteadOf "https://github.com/" && \
-        echo "Git config set successfully"; \
-    else \
-        echo "No GitHub token provided, skipping git config"; \
-    fi
-
-# Debug: Show git config
-RUN git config --global --list | grep url || echo "No URL replacements in git config"
-
-# Install Python dependencies
-RUN pip install --no-cache-dir -r requirements.txt || \
-    (echo "Failed to install requirements. Error details:" && \
-     pip install --no-cache-dir -r requirements.txt -v)
-
-# Copy application code
+# Copy application code (including vendored dependencies)
 COPY . .
+
+# Add vendor directory to Python path
+ENV PYTHONPATH=/app/vendor:$PYTHONPATH
 
 # Create reports directory
 RUN mkdir -p reports
