@@ -19,10 +19,14 @@ RUN git --version
 # Upgrade pip and install wheel
 RUN pip install --upgrade pip wheel setuptools
 
-# Install Python dependencies with verbose output
-RUN pip install --no-cache-dir -r requirements.txt || \
-    (echo "Failed to install requirements. Trying with verbose output:" && \
-     pip install --no-cache-dir -r requirements.txt -v)
+# Configure git to use token for private repos (if provided)
+ARG GITHUB_TOKEN
+RUN if [ -n "$GITHUB_TOKEN" ]; then \
+      git config --global url."https://${GITHUB_TOKEN}@github.com/".insteadOf "https://github.com/"; \
+    fi
+
+# Install Python dependencies
+RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy application code
 COPY . .
