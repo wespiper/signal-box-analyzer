@@ -1,6 +1,10 @@
 {
   "build": {
-    "builder": "NIXPACKS"
+    "builder": "DOCKERFILE",
+    "dockerfilePath": "./Dockerfile",
+    "buildArgs": {
+      "GITHUB_TOKEN": "$GITHUB_TOKEN"
+    }
   },
   "deploy": {
     "startCommand": "python -m uvicorn api.main:app --host 0.0.0.0 --port $PORT",

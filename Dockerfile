@@ -22,8 +22,14 @@ RUN pip install --upgrade pip wheel setuptools
 # Configure git to use token for private repos (if provided)
 ARG GITHUB_TOKEN
 RUN if [ -n "$GITHUB_TOKEN" ]; then \
+      echo "GitHub token provided, configuring git..." && \
       git config --global url."https://${GITHUB_TOKEN}@github.com/".insteadOf "https://github.com/"; \
+    else \
+      echo "No GitHub token provided"; \
     fi
+
+# Debug: Show git config
+RUN git config --list | grep url || echo "No URL replacements configured"
 
 # Install Python dependencies
 RUN pip install --no-cache-dir -r requirements.txt
