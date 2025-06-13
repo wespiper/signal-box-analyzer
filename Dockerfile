@@ -21,18 +21,17 @@ RUN pip install --upgrade pip wheel setuptools
 
 # Configure git to use token for private repos (if provided)
 ARG GITHUB_TOKEN
+
+# Create a modified requirements file with token authentication
 RUN if [ -n "$GITHUB_TOKEN" ]; then \
-      echo "GitHub token provided, configuring git..." && \
-      git config --global url."https://${GITHUB_TOKEN}@github.com/".insteadOf "https://github.com/"; \
+      echo "Configuring private repo access..." && \
+      sed "s|git+https://github.com/|git+https://${GITHUB_TOKEN}@github.com/|g" requirements.txt > requirements-auth.txt; \
     else \
-      echo "No GitHub token provided"; \
+      cp requirements.txt requirements-auth.txt; \
     fi
 
-# Debug: Show git config
-RUN git config --list | grep url || echo "No URL replacements configured"
-
 # Install Python dependencies
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir -r requirements-auth.txt && rm requirements-auth.txt
 
 # Copy application code
 COPY . .
