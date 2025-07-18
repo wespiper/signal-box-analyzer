@@ -98,7 +98,7 @@ class AutoGenDetector(BaseDetector):
             "autogen",
             "autogen.agentchat",
             "autogen.oai",
-            "pyautogen",
+            "ag2",
         ]
         
         # Config files
